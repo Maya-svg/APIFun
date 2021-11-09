@@ -1,0 +1,117 @@
+<!doctype html>
+<html>
+<head>
+	<title>University API</title>
+	<meta charset="utf-8"/>
+	<style>
+		body{
+			background-color: rgb(108, 164, 247);
+		}
+		#tittle{
+			font-size: xx-large;
+			text-align: center;
+		}
+		#info{
+			font-size: large;
+            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+            width: 100%;
+            margin-bottom: 4%;
+		}
+		.col{
+			width:calc(50% - 28px);
+			/* calc(20% - 28px); */
+			float: left;
+			line-height: 200%;
+			font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+			/* padding: 10px; */
+			
+			font-size: xx-large;
+			text-align: center;
+		}
+		img{
+			width: 40%;
+		}
+		a:link{
+			
+			text-decoration: none;
+		}
+		a:visited{
+			color: rgb(0, 0, 0);
+		}
+	</style>
+	<script>
+		function getData() {
+			strHTML = "";
+			// Instance of request object 
+			request = new XMLHttpRequest();
+			console.log("1 - request object created");
+ 
+			// Step 2: Open stream
+			request.open("GET", "http://universities.hipolabs.com/search?country=United+States", true);
+			console.log("2 - opened request file");
+ 
+			// Step 3: set up event handler 
+			request.onreadystatechange = function() {
+			console.log("3 - readystatechange event fired.");
+ 
+				if (request.readyState == 4 && request.status == 200) {
+					console.log("5 - response received");
+					result = request.responseText;
+
+					schools = JSON.parse(result);
+					
+					strHTML = "<div class='col'>";
+						for(i=0;i<6;i++){
+							strHTML += 
+								`<a href= ${schools[i].web_pages} target="_blank"> <img src= "building${i}.jpeg"/> </a>`
+								+ "</br>" 
+								+ schools[i].name 
+								+ "</br>";	
+						}
+					strHTML += " </div>";
+					
+					document.getElementById("info").innerHTML = strHTML;
+				}else if (request.readyState == 4 && request.status != 200) {
+					document.getElementById("info").innerHTML = "Something is wrong!  Double check the logs for any errors.";
+				}else if (request.readyState == 3) {
+					document.getElementById("info").innerHTML = "Too soon!  Try again";
+				}
+			}
+			// Step 4: fire off the HTTP request
+			request.send();
+			console.log("4 - Request sent");
+		}
+	</script>
+</head>
+
+
+<body onload="getData()">
+
+	<h1 id="title" style="text-align: center;"> United States Universities </h1>
+
+	<div id="info">Loading...</div>
+
+	<div style="width: 80%; margin-left: 3%; margin-top:12% ;">
+		<h1>Background </h1> 
+
+		<p> 
+			<h2>Description: </h2> 
+			This API displays all the Universities in the United States. People quickly have access to over 2000 univerties that are in the U.S as well as have a link to that institutions site. Here 10 of the schools are shown and by clicking on their image, ne will be redirected to that school's site. 
+		</p>
+
+		<p> 
+			<h3> Found API<a href="https://mixedanalytics.com/blog/list-actually-free-open-no-auth-needed-apis/" target="_blank"> Here. </a> </h3>
+			<h3> Options for the API request: </h3> 
+			<p> I used Postman for the initial request and XMLHttpRequest() for my code. </p>
+			<p>
+				<h2> Applications... </h2>
+				1. This API would be helpful for high school students searching for colleges. This API is great starting point in one's search because it gives them all the possibilities within a giving country and connects them directly to that university's website. 
+
+				<br>
+
+				2. This API would also be helpful for goverment officials who create policies for regarding higher education or regarding federal funding like Pell Grant, etc. This directory of schools offers anyone and everyone quick access to any school they may be researching. 
+			</p>
+		</p>
+	</div>
+</body>
+</html>
